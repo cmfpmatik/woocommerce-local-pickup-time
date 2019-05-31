@@ -248,7 +248,7 @@ class Local_Pickup_Time_Admin {
 			array(
 				'title'    => __( 'Enable All Day Pickup', 'woocommerce-local-pickup-time' ),
 				'desc'     => __( 'Choose whether to enable or disable all day pickup. If enabled, each day in the pickup time menu will show the time from opening to closing.', 'woocommerce-local-pickup-time' ),
-				'id'       => 'local_pickup_enable_alL_day_pickup',
+				'id'       => 'local_pickup_enable_all_day_pickup',
 				'default'  => 'no',
 				'type'     => 'checkbox',
 				'desc_tip' => true
