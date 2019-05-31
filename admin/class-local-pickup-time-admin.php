@@ -249,7 +249,7 @@ class Local_Pickup_Time_Admin {
 				'title'    => __( 'Enable Pickup Times', 'woocommerce-local-pickup-time' ),
 				'desc'     => __( 'Choose whether to enable or disable pickup times. If disabled, the customer will only be able select dates.', 'woocommerce-local-pickup-time' ),
 				'id'       => 'local_pickup_enable_pickup_times',
-				'default'  => true,
+				'default'  => 'yes',
 				'type'     => 'checkbox',
 				'desc_tip' => true
 			),
