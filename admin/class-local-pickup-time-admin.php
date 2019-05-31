@@ -246,6 +246,14 @@ class Local_Pickup_Time_Admin {
 				'desc_tip' => true,
 			),
 			array(
+				'title'    => __( 'Enable Pickup Times', 'woocommerce-local-pickup-time' ),
+				'desc'     => __( 'Choose whether to enable or disable pickup times. If disabled, the customer will only be able select dates.', 'woocommerce-local-pickup-time' ),
+				'id'       => 'local_pickup_enable_pickup_times',
+				'default'  => true,
+				'type'     => 'checkbox',
+				'desc_tip' => true
+			),
+			array(
 				'title'    => __( 'Pickup Time Interval', 'woocommerce-local-pickup-time' ),
 				'desc'     => __( 'Choose the time interval for allowing local pickup orders.', 'woocommerce-local-pickup-time' ),
 				'id'       => 'local_pickup_hours_interval',
