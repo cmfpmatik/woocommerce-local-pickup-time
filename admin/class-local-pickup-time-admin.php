@@ -254,6 +254,15 @@ class Local_Pickup_Time_Admin {
 				'desc_tip' => true
 			),
 			array(
+				'title'    => __( 'Next Day Cutoff Time (use 24-hour time)', 'woocommerce-local-pickup-time' ),
+				'desc'     => __( 'This sets the cut off time for next day pickup.', 'woocommerce-local-pickup-time' ),
+				'id'       => 'local_pickup_next_day_cutoff_time',
+				'css'      => 'width:120px;',
+				'default'  => '',
+				'type'     => 'time',
+				'desc_tip' => true,
+			),
+			array(
 				'title'    => __( 'Pickup Time Interval', 'woocommerce-local-pickup-time' ),
 				'desc'     => __( 'Choose the time interval for allowing local pickup orders.', 'woocommerce-local-pickup-time' ),
 				'id'       => 'local_pickup_hours_interval',
