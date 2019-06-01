@@ -421,6 +421,9 @@ class Local_Pickup_Time {
 		// Initialize firt interval state.
 		$first_interval = true;
 
+		// Get all day pickup setting
+		$enable_all_day_pickup = get_option ( 'local_pickup_enable_all_day_pickup' );
+
 		// Build options.
 		for ( $days = 1; $days <= $num_days_ahead; $days++ ) {
 
@@ -434,18 +437,23 @@ class Local_Pickup_Time {
 				! empty( $pickup_day_open_time ) &&
 				! empty( $pickup_day_close_time )
 			) {
+				if ( $enable_all_day_pickup === 'yes' ) {
+					$time_range = $this->build_pickup_time_range($pickup_datetime->getTimestamp(), $pickup_day_open_time, $pickup_day_close_time);
 
-				// Get the intervals for the day and merge the results with the previous array of intervals.
-				$pickup_options = array_replace(
-					$pickup_options,
-					$this->build_pickup_time_intervals(
-						$pickup_datetime->getTimestamp(),
-						$minutes_interval,
-						$pickup_day_open_time,
-						$pickup_day_close_time,
-						$first_interval
-					)
-				);
+					$pickup_options[ "$time_range" ] = $time_range;
+				} else {
+					// Get the intervals for the day and merge the results with the previous array of intervals.
+					$pickup_options = array_replace(
+						$pickup_options,
+						$this->build_pickup_time_intervals(
+							$pickup_datetime->getTimestamp(),
+							$minutes_interval,
+							$pickup_day_open_time,
+							$pickup_day_close_time,
+							$first_interval
+						)
+					);
+				}
 
 			} else {
 
@@ -471,6 +479,36 @@ class Local_Pickup_Time {
 
 		return $pickup_options;
 
+	}
+
+	public function build_pickup_time_range ( $pickup_timestamp, $pickup_day_open_time, $pickup_day_close_time ) {
+		// Initialize starting DateTime.
+		$pickup_start_datetime = new DateTime( "@$pickup_timestamp" );
+
+		// Initialize opening DateTime.
+		$pickup_open_datetime = new DateTime( "@$pickup_timestamp" );
+
+		// Set the open DateTime to the configured open time.
+		$pickup_day_hours_time_array = explode( ':', $pickup_day_open_time );
+		// Note: PHP pre-7.1 doesn't support milliseconds with the setTime() call.
+		if ( ! defined( 'PHP_VERSION' ) || ! function_exists( 'version_compare' ) || version_compare( PHP_VERSION, '7.1.0', '<' ) ) {
+			$pickup_open_datetime->setTime( $pickup_day_hours_time_array[0], $pickup_day_hours_time_array[1], 0 );
+		} else {
+			$pickup_open_datetime->setTime( $pickup_day_hours_time_array[0], $pickup_day_hours_time_array[1], 0, 0 );
+		}
+
+		// Initialize ending DateTime based on day closed time.
+		$pickup_end_datetime = new DateTime( "@$pickup_timestamp" );
+		// Set ending hour based on close time.
+		$pickup_day_hours_time_array = explode( ':', $pickup_day_close_time );
+		// Note: PHP pre-7.1 doesn't support milliseconds with the setTime() call.
+		if ( ! defined( 'PHP_VERSION' ) || ! function_exists( 'version_compare' ) || version_compare( PHP_VERSION, '7.1.0', '<' ) ) {
+			$pickup_end_datetime->setTime( $pickup_day_hours_time_array[0], $pickup_day_hours_time_array[1], 0 );
+		} else {
+			$pickup_end_datetime->setTime( $pickup_day_hours_time_array[0], $pickup_day_hours_time_array[1], 0, 0 );
+		}
+
+		return $this->pickup_time_range_select_translatable( $pickup_timestamp, $pickup_open_datetime, $pickup_end_datetime );
 	}
 
 	/**
@@ -639,4 +677,7 @@ class Local_Pickup_Time {
 
 	}
 
+	public function pickup_time_range_select_translatable ( $timestamp, $start_time, $end_time ) {
+		return date_i18n( $this->date_format, $timestamp ) . " @ " . date( $this->time_format, $start_time->getTimestamp() ) . " - " . date ( $this->time_format, $end_time->getTimestamp() );
+	}
 }
