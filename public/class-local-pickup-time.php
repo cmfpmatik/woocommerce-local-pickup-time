@@ -424,18 +424,32 @@ class Local_Pickup_Time {
 		// Get all day pickup setting
 		$enable_all_day_pickup = get_option ( 'local_pickup_enable_all_day_pickup' );
 
+		$start_day = 1;
+
+		$next_day_cutoff_time = get_option ( 'local_pickup_next_day_cutoff_time' );
+
+		if ( $next_day_cutoff_time !== null) {
+			$start_day = 2;
+		}
+
+		$current_date = $current_datetime->format('Y-m-d');
+
 		// Build options.
-		for ( $days = 1; $days <= $num_days_ahead; $days++ ) {
+		for ( $days = $start_day; $days <= $num_days_ahead; $days++ ) {
 
 			// Get the day's opening and closing times.
 			$pickup_day_name       = strtolower( $pickup_datetime->format( 'l' ) );
+
 			$pickup_day_open_time  = get_option( 'local_pickup_hours_' . $pickup_day_name . '_start', '' );
 			$pickup_day_close_time = get_option( 'local_pickup_hours_' . $pickup_day_name . '_end', '' );
+			
+			$pickup_date = $pickup_datetime->format('Y-m-d');
 
 			if (
 				! in_array( $pickup_datetime->format( 'm/d/Y' ), $dates_closed ) &&
 				! empty( $pickup_day_open_time ) &&
-				! empty( $pickup_day_close_time )
+				! empty( $pickup_day_close_time ) &&
+				! ($next_day_cutoff_time != null && $current_date === $pickup_date)
 			) {
 				if ( $enable_all_day_pickup === 'yes' ) {
 					$time_range = $this->build_pickup_time_range($pickup_datetime->getTimestamp(), $pickup_day_open_time, $pickup_day_close_time);
