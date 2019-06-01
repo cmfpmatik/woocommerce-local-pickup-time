@@ -124,6 +124,9 @@ class Local_Pickup_Time {
 		// Process the checkout.
 		add_action( 'woocommerce_checkout_process', array( $this, 'field_process' ) );
 
+		// Show the pickup time on the thank you page.
+		add_action( 'woocommerce_thankyou', array( $this, 'thank_you_pickup_time'), 9 );
+
 		// Update the order meta with local pickup time field value.
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta' ) );
 
@@ -638,6 +641,12 @@ class Local_Pickup_Time {
 			wc_add_notice( __( 'Please select a pickup time.', 'woocommerce-local-pickup-time' ), 'error' );
 		}
 
+	}
+
+	public function thank_you_pickup_time($order_id) {
+		$pickup_time = $this->pickup_time_select_translatable( get_post_meta( $order_id, $this->order_meta_key, true ) );
+
+		echo('<strong>Pickup Time:</strong> ' . $pickup_time);
 	}
 
 	/**
