@@ -432,6 +432,19 @@ class Local_Pickup_Time {
 			$start_day = 2;
 		}
 
+		$next_day_cutoff_time_array = explode( ':', $next_day_cutoff_time );
+
+		$cutoff_datetime = new DateTime( "@$current_wp_timestamp" );
+
+		// Note: PHP pre-7.1 doesn't support milliseconds with the setTime() call.
+		if ( ! defined( 'PHP_VERSION' ) || ! function_exists( 'version_compare' ) || version_compare( PHP_VERSION, '7.1.0', '<' ) ) {
+			$cutoff_datetime->setTime( $next_day_cutoff_time_array[0], $next_day_cutoff_time_array[1], 0 );
+		} else {
+			$cutoff_datetime->setTime( $next_day_cutoff_time_array[0], $next_day_cutoff_time_array[1], 0, 0 );
+		}
+
+		echo ( $cutoff_datetime->format('Y-m-d g:i:s A') );
+
 		$current_date = $current_datetime->format('Y-m-d');
 
 		// Build options.
@@ -450,6 +463,7 @@ class Local_Pickup_Time {
 				! empty( $pickup_day_open_time ) &&
 				! empty( $pickup_day_close_time ) &&
 				! ($next_day_cutoff_time != null && $current_date === $pickup_date)
+				// Add check here for if the next day time slot should display or not.
 			) {
 				if ( $enable_all_day_pickup === 'yes' ) {
 					$time_range = $this->build_pickup_time_range($pickup_datetime->getTimestamp(), $pickup_day_open_time, $pickup_day_close_time);
