@@ -646,7 +646,7 @@ class Local_Pickup_Time {
 	public function thank_you_pickup_time($order_id) {
 		$pickup_time = $this->pickup_time_select_translatable( get_post_meta( $order_id, $this->order_meta_key, true ) );
 
-		echo('<strong>Pickup Time:</strong> ' . $pickup_time);
+		echo('<p><strong>Pickup Time:</strong> ' . $pickup_time ."</p>");
 	}
 
 	/**
