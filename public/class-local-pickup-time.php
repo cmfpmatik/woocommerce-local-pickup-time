@@ -636,9 +636,17 @@ class Local_Pickup_Time {
 	public function field_process() {
 		global $woocommerce;
 
+		$selected_pickup_time = $_POST['local_pickup_time_select'];
+
 		// Check if set, if its not set add an error.
-		if ( ! $_POST['local_pickup_time_select'] ) {
+		if ( ! $selected_pickup_time ) {
 			wc_add_notice( __( 'Please select a pickup time.', 'woocommerce-local-pickup-time' ), 'error' );
+		} else {
+			$pickup_time_options = $this->build_pickup_time_options();
+
+			if ( ! array_key_exists ($selected_pickup_time, $pickup_time_options) ) {
+				wc_add_notice( __( 'Unfortuately, your selected pickup time has passed. Please select another time.', 'woocommerce-local-pickup-time' ), 'error' );
+			}
 		}
 
 	}
