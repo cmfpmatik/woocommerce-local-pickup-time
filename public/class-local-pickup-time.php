@@ -611,7 +611,7 @@ class Local_Pickup_Time {
 	 * @param object $checkout The checkout object.
 	 */
 	public function time_select( $checkout ) {
-		echo '<div id="local-pickup-time-select"><h2>' . __( 'Pickup Time', 'woocommerce-local-pickup-time' ) . '</h2>';
+		echo '<div id="local-pickup-time-select"><h3>' . __( 'Pickup Time', 'woocommerce-local-pickup-time' ) . '</h3>';
 
 		woocommerce_form_field(
 			'local_pickup_time_select',
